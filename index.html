@@ -1198,6 +1198,23 @@
         <p class="product-category">${p.category}</p>
         <p class="product-name">${p.name}</p>
         <div class="product-price">${priceHTML}</div>
+
+
+          <div class="product-payment-btns" style="display:flex; flex-direction:column; gap:6px; margin-top:10px;">
+            <button class="btn-cod" onclick="openCODForm('${p.name}', '${p.price}')">
+              🚚 Cash on Delivery
+            </button>
+            <a href="https://easypaisa.com.pk/pay/YOUR_LINK" target="_blank" class="btn-easypaisa"
+               style="background:#00a651; color:white; padding:8px 12px; border-radius:6px; text-decoration:none; font-size:13px; text-align:center;">
+              💚 Easypaisa
+            </a>
+            <a href="https://payments.jazzcash.com.pk/YOUR_LINK" target="_blank" class="btn-jazzcash"
+               style="background:#cc0000; color:white; padding:8px 12px; border-radius:6px; text-decoration:none; font-size:13px; text-align:center;">
+              ❤️ JazzCash
+            </a>
+          </div>
+
+        </div>`;
       </div>`;
   });
 
@@ -1259,7 +1276,47 @@
     e.preventDefault();
     e.target.reset();
     showToast('Thanks for subscribing! Welcome to the family ✓');
-  }
+  }}
+
+    // — COD —
+    function openCODForm(productName, price) {
+      document.getElementById('cod-product-title').innerText = 'Order: ' + productName;
+      document.getElementById('cod-product-price').innerText = 'Price: ' + price + ' (Pay on Delivery)';
+      document.getElementById('cod-modal').style.display = 'flex';
+    }
+
+    function closeCODForm() {
+      document.getElementById('cod-modal').style.display = 'none';
+    }
+
+    function submitCOD() {
+      const name = document.getElementById('cod-name').value;
+      const phone = document.getElementById('cod-phone').value;
+      const address = document.getElementById('cod-address').value;
+      const product = document.getElementById('cod-product-title').innerText;
+      if (!name || !phone || !address) { alert('Please fill in all fields.'); return; }
+      const message = `🛍️ New COD Order!\n\n${product}\nName: ${name}\nPhone: ${phone}\nAddress: ${address}`;
+      const whatsappURL = `https://wa.me/923XXXXXXXXX?text=${encodeURIComponent(message)}`;
+      window.open(whatsappURL, '_blank');
+      closeCODForm();
+    }
+  </script>  ← this is the existing closing tag
 </script>
+</body></script>
+
+  <!-- COD Modal -->
+  <div id="cod-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%;
+       background:rgba(0,0,0,0.5); z-index:9999; justify-content:center; align-items:center;">
+    <div style="background:white; padding:30px; border-radius:12px; width:90%; max-width:400px;">
+      <h3 id="cod-product-title">Order Form</h3>
+      <p id="cod-product-price"></p>
+      <input type="text" id="cod-name" placeholder="Full Name" style="width:100%; margin:8px 0; padding:10px; border:1px solid #ddd; border-radius:6px;"><br>
+      <input type="text" id="cod-phone" placeholder="Phone Number" style="width:100%; margin:8px 0; padding:10px; border:1px solid #ddd; border-radius:6px;"><br>
+      <textarea id="cod-address" placeholder="Delivery Address" style="width:100%; margin:8px 0; padding:10px; border:1px solid #ddd; border-radius:6px;" rows="3"></textarea>
+      <button onclick="submitCOD()" style="background:#c8a96e; color:white; padding:12px 24px; border:none; border-radius:6px; width:100%; font-size:16px; cursor:pointer;">✅ Confirm Order</button>
+      <button onclick="closeCODForm()" style="background:#eee; color:#333; padding:10px 24px; border:none; border-radius:6px; width:100%; margin-top:8px; cursor:pointer;">Cancel</button>
+    </div>
+  </div>
+
 </body>
 </html>
